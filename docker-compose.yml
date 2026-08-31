@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: boutique
+      POSTGRES_USER: boutique
+      POSTGRES_PASSWORD: boutique
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - ./backend/:/app
+    ports:
+      - '8000:8000'
+    environment:
+      DATABASE_URL: postgres://boutique:boutique@db:5432/boutique
+      DJANGO_SECRET_KEY: change-me
+      STRIPE_SECRET_KEY: ''
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - '8080:80'
+
+volumes:
+  db_data:
