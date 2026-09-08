@@ -25,10 +25,16 @@
 
 <script>
 import axios from 'axios'
+
 export default {
   data() {
-    return { products: [], page: 1, perPage: 10 }
+    return {
+      products: [],
+      page: 1,
+      perPage: 10
+    }
   },
+
   async created() {
     try {
       const res = await axios.get('/api/products/')
@@ -36,12 +42,13 @@ export default {
     } catch (e) {
       console.error(e)
     }
-  }
-  ,
+  },
+
   methods: {
     async buy(id) {
       try {
         const res = await axios.post(`/api/stripe/checkout/${id}/`)
+
         if (res.data && res.data.url) {
           window.location.href = res.data.url
         }
@@ -49,17 +56,41 @@ export default {
         console.error(e)
         alert('Unable to create checkout session')
       }
+    },
+
+    prev() {
+      if (this.page > 1) {
+        this.page--
+      }
+    },
+
+    next() {
+      if (this.page < this.totalPages) {
+        this.page++
+      }
+    }
+  },
+
+  computed: {
+    totalPages() {
+      return Math.max(
+        1,
+        Math.ceil(this.products.length / this.perPage)
+      )
+    },
+
+    paged() {
+      const start = (this.page - 1) * this.perPage
+      return this.products.slice(start, start + this.perPage)
+    }
+  },
+
+  watch: {
+    products() {
+      if (this.page > this.totalPages) {
+        this.page = this.totalPages
+      }
     }
   }
-  ,computed: {
-    totalPages() { return Math.max(1, Math.ceil(this.products.length / this.perPage)) },
-    paged() { const start = (this.page-1)*this.perPage; return this.products.slice(start, start+this.perPage) }
-  ,
-  },
-  watch: {
-    products() { if (this.page > this.totalPages) this.page = this.totalPages }
-  ,
-  prev() { if (this.page>1) this.page-- },
-  next() { if (this.page < this.totalPages) this.page++ }
 }
 </script>

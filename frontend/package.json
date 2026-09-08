@@ -8,11 +8,12 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.3.4",
     "axios": "^1.4.0",
+    "vue": "^3.3.4",
     "vue-router": "^4.2.3"
   },
   "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.8",
     "vite": "^5.0.0"
   }
 }
