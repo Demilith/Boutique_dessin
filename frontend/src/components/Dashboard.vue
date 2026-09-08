@@ -59,7 +59,7 @@
 <script>
 import API from '../auth'
 import ProductForm from './ProductForm.vue'
-import { setAuthToken } from '../auth'
+import { setAuthTokens } from '../auth'
 
 export default {
   name: 'Dashboard',

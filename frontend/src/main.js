@@ -7,7 +7,7 @@ import Login from './components/Login.vue'
 import Register from './components/Register.vue'
 import Dashboard from './components/Dashboard.vue'
 import CustomerOrders from './components/CustomerOrders.vue'
-import { setAuthToken } from './auth'
+import { setAuthTokens } from './auth'
 
 const routes = [
   { path: '/', component: ProductList },
@@ -21,6 +21,8 @@ const routes = [
 const router = createRouter({ history: createWebHistory(), routes })
 
 // Initialize auth token if present
-setAuthToken(localStorage.getItem('access'))
-
+setAuthTokens(
+  localStorage.getItem('access'),
+  localStorage.getItem('refresh')
+)
 createApp(App).use(router).mount('#app')
